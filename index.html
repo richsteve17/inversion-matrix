@@ -98,7 +98,10 @@ const App = () => {
   const [executionError, setExecutionError] = useState("");
   const [taskType, setTaskType] = useState("text_gen");
   const [modelBehavior, setModelBehavior] = useState("passive");
-  const [selectedModel, setSelectedModel] = useState("google/gemini-3.6-flash");
+  const [selectedModel, setSelectedModel] = useState("");
+const [availableModels, setAvailableModels] = useState([]);
+const [modelSearch, setModelSearch] = useState("");
+const [modelsLoaded, setModelsLoaded] = useState(false);
   const [apiKey, setApiKey] = useState(() => localStorage.getItem('or_key') || "");
   const [showKeyInput, setShowKeyInput] = useState(false);
   const [tempKey, setTempKey] = useState("");
@@ -108,18 +111,24 @@ const App = () => {
   const [logOutcome, setLogOutcome] = useState("complied");
   const [logNotes, setLogNotes] = useState("");
 
-  const availableModels = [
-    { id: "google/gemini-3.6-flash", name: "Gemini 3.6 Flash" },
-    { id: "google/gemini-2.5-pro", name: "Gemini 2.5 Pro" },
-    { id: "anthropic/claude-sonnet-4", name: "Claude Sonnet 4" },
-    { id: "openai/gpt-4.1", name: "GPT 4.1" },
-    { id: "meta-llama/llama-4-maverick", name: "Llama 4 Maverick" },
-    { id: "mistralai/mistral-large-latest", name: "Mistral Large" },
-    { id: "x-ai/grok-3", name: "Grok 3" },
-    { id: "moonshotai/kimi-k2", name: "Kimi K2" },
-    { id: "deepseek/deepseek-chat", name: "DeepSeek V3" },
-    { id: "qwen/qwen-3-235b-a22b", name: "Qwen 3 235B" }
-  ];
+  useEffect(function() {
+  fetch("https://openrouter.ai/api/v1/models")
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data.data && data.data.length > 0) {
+        const sorted = data.data.sort(function(a, b) {
+          return (a.name || a.id).localeCompare(b.name || b.id);
+        });
+        setAvailableModels(sorted);
+        setSelectedModel(sorted[0].id);
+        setModelsLoaded(true);
+      }
+    })
+    .catch(function(err) {
+      console.error("Model fetch failed:", err);
+      setModelsLoaded(false);
+    });
+}, []);
 
   const saveKey = () => {
     if (tempKey.trim()) {
