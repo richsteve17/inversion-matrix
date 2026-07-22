@@ -118,6 +118,7 @@ const [modelsLoaded, setModelsLoaded] = useState(false);
   });
   const [logOutcome, setLogOutcome] = useState("complied");
   const [logNotes, setLogNotes] = useState("");
+  const [challengeBrief, setChallengeBrief] = useState("");
 
   useEffect(function() {
   fetch("https://openrouter.ai/api/v1/models")
