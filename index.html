@@ -20,6 +20,11 @@
 @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 </style>
 </head>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
+</script>
 <body>
 <div id="root"></div>
 <script type="text/babel">
