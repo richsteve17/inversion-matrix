@@ -334,9 +334,32 @@ const [modelsLoaded, setModelsLoaded] = useState(false);
                   <div className="px-5 py-4 border-b border-zinc-900 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-zinc-950/80">
                     <div className="flex items-center gap-2"><Icon name="code" size={16} className={current.accent}/><span className="text-[10px] font-black tracking-widest text-zinc-400 uppercase">Compiled Vector</span></div>
                     <div className="flex flex-wrap gap-2 items-center">
-                      <select value={selectedModel} onChange={function(e){setSelectedModel(e.target.value)}} className="bg-[#030305] border border-zinc-900 text-xs py-2 px-3 rounded-lg text-zinc-300 outline-none focus:border-emerald-500 font-mono max-w-[180px]">
-                        {availableModels.map(function(m){return(<option key={m.id} value={m.id}>{m.name}</option>)})}
-                      </select>
+                      <div className="flex flex-col gap-1">
+  <input
+    type="text"
+    value={modelSearch}
+    onChange={function(e) { setModelSearch(e.target.value); }}
+    placeholder="Search models..."
+    className="bg-[#030305] border border-zinc-900 text-xs py-1.5 px-3 rounded-lg text-zinc-300 outline-none focus:border-emerald-500 font-mono w-full sm:w-[220px]"
+  />
+  <select
+    value={selectedModel}
+    onChange={function(e) { setSelectedModel(e.target.value); }}
+    className="bg-[#030305] border border-zinc-900 text-xs py-2 px-3 rounded-lg text-zinc-300 outline-none focus:border-emerald-500 font-mono w-full sm:w-[220px] max-h-[300px]"
+  >
+    {!modelsLoaded && <option value="">Loading models...</option>}
+    {modelsLoaded && availableModels
+      .filter(function(m) {
+        if (!modelSearch.trim()) return true;
+        var s = modelSearch.toLowerCase();
+        return (m.id || "").toLowerCase().indexOf(s) !== -1 || (m.name || "").toLowerCase().indexOf(s) !== -1;
+      })
+      .map(function(m) {
+        return <option key={m.id} value={m.id}>{m.name || m.id}</option>;
+      })
+    }
+  </select>
+</div>
                       <button onClick={copyToClipboard} disabled={!payload} className={"text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 px-3.5 py-2 rounded-lg border " + (payload ? current.bg + " " + current.accent + " " + current.border + " hover:opacity-85" : "border-zinc-900 text-zinc-700 cursor-not-allowed")}><Icon name="copy" size={13}/> {copyStatus}</button>
                       <button onClick={handleLiveFireExecution} disabled={!payload||isExecuting} className={"text-xs font-black uppercase tracking-wider transition-all flex items-center gap-2 px-4 py-2 rounded-lg border " + (payload&&!isExecuting?'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20':'border-zinc-900 text-zinc-700 cursor-not-allowed')}>{isExecuting?<Icon name="refreshCw" className="animate-spin" size={13}/>:<Icon name="play" size={13}/>}{isExecuting?'Firing...':'Execute'}</button>
                     </div>
