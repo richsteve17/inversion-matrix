@@ -1,39 +1,24 @@
-# inversion-matrix
+# 🪞 Inversion Matrix v10
 
-No description provided.
+**Adversarial AI Prompt Research & Encoding Workbench**
 
-## 🎯 Purpose
-This repository contains a general-purpose code project.
+A zero-dependency React PWA built to test safety filters, prompt drift, token boundary effects, and adversarial jailbreak patterns across LLMs.
 
-## 🛠️ Tech Stack
-- **Primary Language**: JavaScript
+---
 
-## 📦 Installation
+## ⚡ Capabilities
+- **Multi-Scheme Prompt Transformation**:
+  - ROT13 Cipher
+  - LeetSpeak Encoding
+  - Homoglyph Substitution (Cyrillic / Unicode lookalikes)
+  - Safe Base64 encoding/decoding
+- **Cross-Model Testing Panel**: Rapid prompt generation and diffing for adversarial safety research.
+- **Offline PWA**: Instant browser loading via Service Worker.
+
+---
+
+## 🚀 Usage
+Open `index.html` in any modern web browser or serve with:
 ```bash
-# Clone the repository
-git clone https://github.com/richsteve17/inversion-matrix.git
-cd inversion-matrix
-
-# Install dependencies
-npm install
-
-# Optional: build if needed
-npm run build
+python3 -m http.server 8080
 ```
-## 💡 Usage
-Refer to the entry points above or inspect the source code for execution instructions.
-## 🤝 Contributing
-Contributions are welcome! Please open an issue or submit a pull request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📄 License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-- Built for [inversion-matrix](https://github.com/richsteve17/inversion-matrix).
-- Generated with ❤️ using custom code-aware documentation tools.
