@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate-static:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify required static assets
+        run: |
+          set -euo pipefail
+          for f in index.html sw.js manifest.json README.md LICENSE; do
+            test -f "$f" || { echo "missing required file: $f"; exit 1; }
+          done
+          echo "Required files present."
+
+      - name: Sanity-check Pages base paths
+        run: |
+          set -euo pipefail
+          grep -q '/inversion-matrix/manifest.json' index.html
+          grep -q "/inversion-matrix/sw.js" index.html
+          grep -q '"start_url": "/inversion-matrix/"' manifest.json
+          grep -q "const BASE = '/inversion-matrix'" sw.js
+          python3 -c "import json; json.load(open('manifest.json'))"
+          echo "Base-path and manifest checks passed."
