@@ -21,10 +21,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Stage static site
+      - name: Stage static site for project Pages
         run: |
+          set -euo pipefail
           mkdir -p _site
           cp index.html sw.js manifest.json _site/
+          # Project site is served under /inversion-matrix/; rewrite root-absolute PWA paths.
+          sed -i 's|href="/manifest.json"|href="manifest.json"|' _site/index.html
+          sed -i "s|register('/sw.js')|register('./sw.js', { scope: './' })|" _site/index.html
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

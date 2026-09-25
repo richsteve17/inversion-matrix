@@ -21,12 +21,17 @@ jobs:
           done
           echo "Required files present."
 
-      - name: Sanity-check relative Pages paths
+      - name: Validate Pages path rewrite + manifest
         run: |
           set -euo pipefail
-          grep -q 'href="manifest.json"' index.html
-          grep -q "register('./sw.js'" index.html
-          grep -q '"start_url": "./"' manifest.json
-          grep -q "./index.html" sw.js
-          python3 -c "import json; json.load(open('manifest.json'))"
-          echo "Relative path and manifest checks passed."
+          mkdir -p /tmp/pages-check
+          cp index.html sw.js manifest.json /tmp/pages-check/
+          # Same rewrite Pages deploy uses for project-site base
+          sed -i 's|href="/manifest.json"|href="manifest.json"|' /tmp/pages-check/index.html
+          sed -i "s|register('/sw.js')|register('./sw.js', { scope: './' })|" /tmp/pages-check/index.html
+          grep -q 'href="manifest.json"' /tmp/pages-check/index.html
+          grep -q "register('./sw.js'" /tmp/pages-check/index.html
+          grep -q '"start_url": "./"' /tmp/pages-check/manifest.json
+          grep -q "./index.html" /tmp/pages-check/sw.js
+          python3 -c "import json; json.load(open('/tmp/pages-check/manifest.json'))"
+          echo "Pages rewrite + manifest checks passed."
