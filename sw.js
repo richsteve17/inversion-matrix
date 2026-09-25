@@ -1,6 +1,5 @@
-const BASE = '/inversion-matrix';
 const CACHE = 'inversion-matrix-' + Date.now();
-const ASSETS = [BASE + '/', BASE + '/index.html', BASE + '/manifest.json'];
+const ASSETS = ['./', './index.html', './manifest.json'];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)));

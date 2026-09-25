@@ -21,12 +21,12 @@ jobs:
           done
           echo "Required files present."
 
-      - name: Sanity-check Pages base paths
+      - name: Sanity-check relative Pages paths
         run: |
           set -euo pipefail
-          grep -q '/inversion-matrix/manifest.json' index.html
-          grep -q "/inversion-matrix/sw.js" index.html
-          grep -q '"start_url": "/inversion-matrix/"' manifest.json
-          grep -q "const BASE = '/inversion-matrix'" sw.js
+          grep -q 'href="manifest.json"' index.html
+          grep -q "register('./sw.js'" index.html
+          grep -q '"start_url": "./"' manifest.json
+          grep -q "./index.html" sw.js
           python3 -c "import json; json.load(open('manifest.json'))"
-          echo "Base-path and manifest checks passed."
+          echo "Relative path and manifest checks passed."
