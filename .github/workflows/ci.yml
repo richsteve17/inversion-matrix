@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate-static:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify required static assets
+        run: |
+          set -euo pipefail
+          for f in index.html sw.js manifest.json README.md LICENSE; do
+            test -f "$f" || { echo "missing required file: $f"; exit 1; }
+          done
+          echo "Required files present."
+
+      - name: Validate Pages path rewrite + manifest
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/pages-check
+          cp index.html sw.js manifest.json /tmp/pages-check/
+          # Same rewrite Pages deploy uses for project-site base
+          sed -i 's|href="/manifest.json"|href="manifest.json"|' /tmp/pages-check/index.html
+          sed -i "s|register('/sw.js')|register('./sw.js', { scope: './' })|" /tmp/pages-check/index.html
+          grep -q 'href="manifest.json"' /tmp/pages-check/index.html
+          grep -q "register('./sw.js'" /tmp/pages-check/index.html
+          grep -q '"start_url": "./"' /tmp/pages-check/manifest.json
+          grep -q "./index.html" /tmp/pages-check/sw.js
+          python3 -c "import json; json.load(open('/tmp/pages-check/manifest.json'))"
+          echo "Pages rewrite + manifest checks passed."
